@@ -66,7 +66,7 @@
         // Define the line
         var valueLine = d3.line()
             .x(function(d) { return x(d.date); })
-            .y(function(d) { return y(+d.value); });
+            .y(function(d) { return y(d.value); });
 
         //Import data from api
         d3.json("api_all.php", function(error, data) {
@@ -120,7 +120,8 @@
          		var selectStock = nest.filter(function(d){
                         return d.key == stock;
                       })
-              //Draw y axis
+              console.log(selectStock)
+              //Scale y axis
         	    var selectStockGroups = svg.selectAll(".stockGroups")
         		    .data(selectStock, function(d){
         		      return d ? d.key : this.key;
@@ -133,7 +134,7 @@
                     });
 
         		var initialPath = selectStockGroups.selectAll(".line")
-        			.datum(function(d) { return d.values; })
+        			.data(selectStock)
         			.enter()
         			.append("path")
 
@@ -171,18 +172,17 @@
          		var selectStock = nest.filter(function(d){
                         return d.key == stock;
                       })
-
+            console.log(selectStock);
          		// Select all of the grouped elements and update the data
         	    var selectStockGroups = svg.selectAll(".stockGroups")
-        		    .datum(selectStock)
+        		    .data(selectStock)
         		    .each(function(d){
                         y.domain([0, d3.max(data, function(d) { return d.value; })])
                     });
 
         		    // Select all the lines and transition to new positions
                     selectStockGroups.selectAll("path.line")
-                       .data(function(d) { return d.values; },
-                       		function(d){ return d.key; })
+                       .data(selectStock)
                        .transition()
                           .duration(1000)
                           .attr("d", function(d){
@@ -206,7 +206,7 @@
             var selectedStock = d3.select(this)
                     .select("select")
                     .property("value")
-
+            console.log(selectedStock);
                 // Run update function with the selected stock
                 updateGraph(selectedStock)
           });
