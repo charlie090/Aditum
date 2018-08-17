@@ -25,6 +25,12 @@
       fill: steelblue;
   }
 
+  .line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+  }
+
   </style>
 
   <script src="https://d3js.org/d3.v4.min.js"></script>
@@ -43,7 +49,7 @@
         <script>
 
         //Set dimensions and margins for the graph
-        var margin = {top: 20, right: 20, bottom: 100, left: 70},
+        var margin = {top: 20, right: 20, bottom: 70, left: 70},
             width = 960 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
 
@@ -65,6 +71,7 @@
 
         // Define the line
         var valueLine = d3.line()
+            .defined(function(d) { return d; })
             .x(function(d) { return x(d.date); })
             .y(function(d) { return y(d.value); });
 
@@ -85,6 +92,7 @@
 
           console.log(nest);
           //Scale the range of the data
+          //x axis scale for entire dataset
           x.domain(d3.extent(data, function(d) { return d.date; }));
           //y.domain([0, d3.max(data, function(d) { return d.value; })]);
 
