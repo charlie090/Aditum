@@ -121,6 +121,29 @@
                         return d.key == stock;
                       })
               console.log(selectStock)
+
+              //Unnest selectStock for y axis
+              var unnested = function(data, children){
+          				var out = [];
+                  data.forEach(function(d, i){
+                    console.log(i, d);
+                    d_keys = Object.keys(d);
+                    console.log(i, d_keys)
+                    values = d[children];
+
+                    values.forEach(function(v){
+                    	d_keys.forEach(function(k){
+                        if (k != children) { v[k] = d[k]}
+                      })
+                      out.push(v);
+                    })
+
+                  })
+                  return out;
+                }
+                var selectStockUnnested = unnested(selectStock, "values");
+
+
               //Scale y axis
         	    var selectStockGroups = svg.selectAll(".stockGroups")
         		    .data(selectStock, function(d){
@@ -130,7 +153,8 @@
         		    .append("g")
         		    .attr("class", "stockGroups")
         		    .each(function(d){
-                        y.domain([0, d3.max(data, function(d) { return d.value; })])
+                        y.domain([0, d3.max(selectStockUnnested, function(d) { return d.value; })])
+                        console.log(selectStockUnnested);
                     });
 
         		var initialPath = selectStockGroups.selectAll(".line")
@@ -173,11 +197,33 @@
                         return d.key == stock;
                       })
             console.log(selectStock);
+
+            //Unnest selectStock for y axis
+            var unnested = function(data, children){
+                var out = [];
+                data.forEach(function(d, i){
+                  console.log(i, d);
+                  d_keys = Object.keys(d);
+                  console.log(i, d_keys)
+                  values = d[children];
+
+                  values.forEach(function(v){
+                    d_keys.forEach(function(k){
+                      if (k != children) { v[k] = d[k]}
+                    })
+                    out.push(v);
+                  })
+
+                })
+                return out;
+              }
+              var selectStockUnnested = unnested(selectStock, "values");
+
          		// Select all of the grouped elements and update the data
         	    var selectStockGroups = svg.selectAll(".stockGroups")
         		    .data(selectStock)
         		    .each(function(d){
-                        y.domain([0, d3.max(data, function(d) { return d.value; })])
+                        y.domain([0, d3.max(selectStockUnnested, function(d) { return d.value; })])
                     });
 
         		    // Select all the lines and transition to new positions
